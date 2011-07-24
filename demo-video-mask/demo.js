@@ -3,44 +3,106 @@ var canvasT = null;
 var canvasM = null;
 var video = null;  
 var ctx = null; 
+var listText = ['Sugar Cane','is','burned','in','Brazil'];
+
+function changeVideo(ii) { 
+	var videoURL = document.getElementById("videoselection").options[ii].value;
+  	document.getElementById("video").setAttribute("src",videoURL);
+} 
 
 function start() {
-  drawMask();
-  play(); 
-  animate(); 
+  document.getElementById("maskbound").addEventListener("click",divein,false);
+  listText = document.getElementById('slides').value.split(' ');
+  renderNextMask("Welcome and Click");
+  fixInitial(); 
 }
 
-function animate() { 
+function restart() { 
+  listText = document.getElementById('slides').value.split(' ');
+  pointer=0;
+  renderNextMask("Welcome and Click");
+  fixInitial(); 
+} 
+
+var prefixes = ["moz","o","webkit"];
+
+function fixInitial() { 
  	var scale=.51;
-	document.getElementById("reflectionmask").setAttribute("style","-moz-transition-property: -moz-transform; -moz-transform-origin: 0 0; -moz-transform:scale("+scale+"); -moz-transition-duration:3s;  -webkit-transition-property: -webkit-transform; -webkit-transform:scale("+scale+"); -webkit-transition-duration:3s;  -o-transition-property: -o-transform; -o-transform:scale("+scale+"); -o-transition-duration:3s;");
+	var buffer="";
+	for (var k=0;k<prefixes.length;k++) { 
+		buffer+= "-"+prefixes[k]+"-transform-origin: 0 0; -"+prefixes[k]+"-transform:scale("+scale+");";
+	} 
+	document.getElementById("reflectionmask").setAttribute("style",buffer);
 
 } 
 
+var diving = false;
+
+var angleCounter = 180;
 function divein() { 
-
+	if(diving) { 
+	} else { 
+		diving=true;
 	var scale=44;
-	document.getElementById("maskbound").setAttribute("style","-moz-transition-property: -moz-transform; -moz-transform-origin: 320 180; -moz-transform:scale("+scale+") rotate(180deg) translate(22px); -moz-transition-duration:3s;  -webkit-transition-property: -webkit-transform; -webkit-transform:scale("+scale+"); -webkit-transition-duration:3s;  -o-transition-property: -o-transform; -o-transform:scale("+scale+"); -o-transition-duration:3s;");
+	var buffer = "";
+	for (var k=0;k<prefixes.length;k++) { 
+		buffer+= "-"+prefixes[k]+"-transition-property: -"+prefixes[k]+"-transform opacity; -"+prefixes[k]+"-transform-origin: 320 180; -"+prefixes[k]+"-transform:scale("+scale+") rotate("+angleCounter+"deg) translate(0px); -"+prefixes[k]+"-transition-duration:3s; opacity:1 ";
+	} 
+	angleCounter+=180;
+	document.getElementById("maskbound").setAttribute("style",buffer);
+	setTimeout("diveout()",3000);
+	} 
 } 
 
-function play() { 
-//  drawFromVideo(); 
-  setTimeout("play()",50); 
+function diveout() { 
+	diving=false;
+	renderNextMask(listText[pointer++]);
+	var scale=1;
+	var buffer = "";
+	for (var k=0;k<prefixes.length;k++) { 
+		buffer+= "-"+prefixes[k]+"-transition-property: -"+prefixes[k]+"-transform, opacity; -"+prefixes[k]+"-transform-origin: 320 180; -"+prefixes[k]+"-transform:scale("+scale+") rotate("+angleCounter+"deg) translate(0px); -"+prefixes[k]+"-transition-duration:3s; opacity:1";
+	} 
+	angleCounter+=180;
+	document.getElementById("maskbound").setAttribute("style",buffer);
+
+
 } 
 
 
-function drawMask() { 
-	var elm = 'Brazil';
-	var canvas = document.getElementById("reflection");
+var pointer = 0;
+
+
+var nextCanvas = null;
+var videoSwitch = 0;
+
+function renderNextMask(str) { 
+	var canvas = document.createElement("canvas");
+	canvas.width=1280;
+	canvas.height=720;
+	canvas.style.width="1px";
+	canvas.style.height="1px";
+	document.body.appendChild(canvas);
+	nextCanvas = canvas;
+
 	var ctx = canvas.getContext("2d");
+
 	ctx.fillStyle = "rgba(255, 255, 255, 1)";
-	ctx.font = "320px Verdana"; 
+
+	var elm = str;
+	ctx.font = "200px Times"; 
 	var ww = ctx.measureText(elm);
-	ctx.fillText(elm, parseInt(1280/2)-parseInt(ww.width/2),420);
+	var defaultSize = 180;
+	if(ww.width>1280) { 
+		defaultSize = 180*(1280/ww.width);
+		ctx.font = parseInt(defaultSize)+"px Times"; 
+		ww = ctx.measureText(elm);
+	} 
+	ctx.fillText(elm, parseInt(1280/2)-parseInt(ww.width/2),380);
+
  	ctx.save();
 	ctx.translate(0, 0);
 	//ctx.fillText(elm,0,220);
 	ctx.restore();
-
 
   var canvas2 = document.getElementById('reflectionmask')
   var ctx2 = canvas2.getContext('2d');
