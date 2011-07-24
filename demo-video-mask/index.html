@@ -1,0 +1,23 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+  <head>
+    <title>Video Play Reflection</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="demo.js" type="text/javascript"></script>
+    <script src="blend.js" type="text/javascript"></script>
+  </head>
+  
+  <body onload="start()" style='background-color:black'>
+   <table width="100%" height="100%"><tr><td valign="middle" align="center">
+   <div style='position:relative;width:640px;height:360px'>
+    <video style='position:absolute;top:0;left:0;width:640px;height:360px' width="640" heigth="360" src="http://www.archive.org/download/ace_200910_01/1011e55335afd829ab55c9caee34aaad.mts-ogv30-360.OGV" id="video"  autoplay="play" ></video>
+
+<a href='javascript:' onclick='divein()'>
+    <div id="maskbound" style="position:absolute;top:0px;left:0; width:640px;height:360px;overflow:hidden">
+    <canvas id="reflectionmask" style='position:absolute;' width="1280" height="720"> </canvas> 
+    </div>
+   </div>
+</a>
+   </td></tr></table>
+    <canvas id="reflection" style='width:1px;height:1px;' width="1280" height="720"></canvas> 
+  </body>
+</html>
