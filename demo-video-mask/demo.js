@@ -56,7 +56,12 @@ function divein() {
 
 function diveout() { 
 	diving=false;
-	renderNextMask(listText[pointer++]);
+	if(listText[pointer] != undefined) { 
+		renderNextMask(listText[pointer++]);
+	} else { 
+		pointer=0;
+		renderNextMask(listText[pointer++]);
+	} 
 	var scale=1;
 	var buffer = "";
 	for (var k=0;k<prefixes.length;k++) { 
